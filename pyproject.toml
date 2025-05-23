@@ -48,6 +48,7 @@ art = "^6.2"
 gradio = "^4.37.1"
 nltk = "^3.8.1"
 marker-pdf = "^0.2.16"
+docling = "^2.34.0"
 
 [tool.poetry.scripts]
 omniparse = "server:main"

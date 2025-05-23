@@ -10,7 +10,7 @@
 
 > [!IMPORTANT]
 >
->OmniParse is a platform that ingests and parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether you are working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications such as RAG, fine-tuning, and more
+> OmniParse is a platform that ingests and parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether you are working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications such as RAG, fine-tuning, and more
 
 ## Try it out
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse_GoogleColab.ipynb)
@@ -56,6 +56,12 @@ pip install -e .
 # or
 pip install -r pyproject.toml
 ```
+
+> [!NOTE] Handling flash-attn Installation Issues
+> If flash-attn fails due to PEP 517 build issues, you can try one running this:
+> poetry run pip install --upgrade pip setuptools wheel
+> poetry run pip install flash-attn --no-build-isolation
+> poetry install
 
 ### 🛳️ Docker
 

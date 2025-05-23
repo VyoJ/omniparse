@@ -38,15 +38,16 @@ import os
 import tempfile
 import img2pdf
 from PIL import Image
+from io import BytesIO
+from pathlib import Path
 
-# from omniparse.document.parse import parse_single_image
-from marker.convert import convert_single_pdf
 from omniparse.image.process import process_image_task
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
+from docling.datamodel.base_models import DocumentStream
 
 
-def parse_image(input_data, model_state) -> dict:
+def parse_image(image_name, input_data, model_state) -> dict:
     temp_files = []
 
     try:
@@ -88,12 +89,26 @@ def parse_image(input_data, model_state) -> dict:
                 temp_files.append(temp_pdf_path)
 
         # Parse the PDF file
-        full_text, images, out_meta = convert_single_pdf(
-            temp_pdf_path, model_state.model_list
-        )
+        # full_text, images, out_meta = convert_single_pdf(
+        #     temp_pdf_path, model_state.model_list
+        # )
+
+        source = DocumentStream(name=image_name, stream=BytesIO(Path(temp_pdf_path)))
+        out_meta = {"filename": image_name, "filetype": "image"}
+
+        docling_result = model_state.docling_converter.convert(source)
+        full_text = docling_result.document.export_to_markdown()
+
+        out_meta["block_stats"] = {
+            "images": len(docling_result.document.pictures),
+            "tables": len(docling_result.document.tables),
+        }
+
+        docling_result = model_state.docling_converter.convert(temp_pdf_path)
+        full_text = docling_result.document.export_to_markdown()
 
         parse_image_result = responseDocument(text=full_text, metadata=out_meta)
-        encode_images(images, parse_image_result)
+        encode_images(image_name, docling_result.document, parse_image_result)
 
         return parse_image_result
 
