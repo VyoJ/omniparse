@@ -38,7 +38,8 @@ async def parse_pdf_endpoint(file: UploadFile = File(...)):
     try:
         file_bytes = await file.read()
         source = DocumentStream(name=file.filename, stream=BytesIO(file_bytes))
-        out_meta = {"filename": file.filename, "filetype": file.content_type}
+        filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+        out_meta = {"filename": file.filename, "filetype": filetype}
 
         docling_result = model_state.docling_converter.convert(source)
         full_text = docling_result.document.export_to_markdown()
@@ -85,7 +86,8 @@ async def parse_ppt_endpoint(file: UploadFile = File(...)):
         pdf_bytes = pdf_file.read()
 
     source = DocumentStream(name=file.filename, stream=BytesIO(pdf_bytes))
-    out_meta = {"filename": file.filename, "filetype": file.content_type}
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {"filename": file.filename, "filetype": filetype}
 
     docling_result = model_state.docling_converter.convert(source)
     full_text = docling_result.document.export_to_markdown()
@@ -132,7 +134,8 @@ async def parse_doc_endpoint(file: UploadFile = File(...)):
         pdf_bytes = pdf_file.read()
 
     source = DocumentStream(name=file.filename, stream=BytesIO(pdf_bytes))
-    out_meta = {"filename": file.filename, "filetype": file.content_type}
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {"filename": file.filename, "filetype": filetype}
 
     docling_result = model_state.docling_converter.convert(source)
     full_text = docling_result.document.export_to_markdown()
@@ -183,15 +186,17 @@ async def parse_any_endpoint(file: UploadFile = File(...)):
         )
         input_path = output_pdf_path
 
-    source = DocumentStream(name=file.filename, stream=BytesIO(Path(input_path)))
-    out_meta = {"filename": file.filename, "filetype": file.content_type}
-
-    docling_result = model_state.docling_converter.convert(source)
+    docling_result = model_state.docling_converter.convert(Path(input_path))
     full_text = docling_result.document.export_to_markdown()
 
-    out_meta["block_stats"] = {
-        "images": len(docling_result.document.pictures),
-        "tables": len(docling_result.document.tables),
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {
+        "filename": file.filename,
+        "filetype": filetype,
+        "block_stats": {
+            "images": len(docling_result.document.pictures),
+            "tables": len(docling_result.document.tables),
+        },
     }
 
     os.remove(input_path)

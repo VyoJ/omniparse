@@ -61,12 +61,12 @@ def load_omnimodel(load_documents: bool, load_media: bool, load_web: bool):
         )
         print("[LOG] ✅ Loading Vision Model")
         # if device == "cuda":
-        # shared_state.vision_model = AutoModelForCausalLM.from_pretrained(
-        #     "microsoft/Florence-2-base", torch_dtype=torch.float32, trust_remote_code=True
-        # ).to(device)
-        # shared_state.vision_processor = AutoProcessor.from_pretrained(
-        #     "microsoft/Florence-2-base", trust_remote_code=True
-        # )
+        shared_state.vision_model = AutoModelForCausalLM.from_pretrained(
+            "microsoft/Florence-2-base", torch_dtype=torch.float32, trust_remote_code=True
+        ).to(device)
+        shared_state.vision_processor = AutoProcessor.from_pretrained(
+            "microsoft/Florence-2-base", trust_remote_code=True
+        )
 
     if load_media:
         print("[LOG] ✅ Loading Audio Model")
