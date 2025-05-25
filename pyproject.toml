@@ -5,12 +5,10 @@ description = "API to convert Documents | Media | Webpage into Structured Markdo
 authors = [
     {name = "Adithya S K", email = "adithyaskolavi@gmail.com"}
 ]
-license = "Apache"
+license = {file = "LICENSE"}
 readme = "README.md"
 keywords = ["pdf", "markdown", "ocr", "parse"]
-include = [
-    "server.py",
-]
+
 requires-python = ">=3.10,<4.0"
 dependencies = [
     "art>=6.5",
